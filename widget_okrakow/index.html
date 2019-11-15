@@ -37,12 +37,12 @@
         const colorInput2 = document.getElementById('color_list_background');
         const applyColorsButton = document.getElementById('apply-colors');
         applyColorsButton.addEventListener('click', () => {
-            const iframeSrc = `http://dev.iterative.pl:8100/?mode=krk&color_list_header=${hexToRgb(colorInput1.value)}&color_list_background=${hexToRgb(colorInput2.value)}`;
+            const iframeSrc = `https://dev.iterative.pl:8889/?mode=krk&color_list_header=${hexToRgb(colorInput1.value)}&color_list_background=${hexToRgb(colorInput2.value)}`;
             document.getElementById('iframe').setAttribute('src', iframeSrc);
             code.innerText = getIframeHTML(iframeSrc);
         });
 
-        const defaultIframeSrc = 'http://dev.iterative.pl:8100/?mode=krk&color_list_header=rgb(224,34,45)&color_list_background=rgb(43,42,41)';
+        const defaultIframeSrc = 'https://dev.iterative.pl:8889/?mode=krk&color_list_header=rgb(224,34,45)&color_list_background=rgb(43,42,41)';
         code.innerText = getIframeHTML(defaultIframeSrc);
         document.getElementById('iframe').setAttribute('src', defaultIframeSrc);
     });
