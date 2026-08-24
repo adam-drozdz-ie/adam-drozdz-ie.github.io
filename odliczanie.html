@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Odliczanie do 29 sierpnia 2026</title>
+  <style>
+    :root {
+      --bg: #0e1014;
+      --panel: #161920;
+      --line: #2a2f3a;
+      --text: #e8e4d9;
+      --muted: #8b8478;
+      --accent: #d4a574;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      font-family: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100%;
+      padding: 24px;
+    }
+
+    .wrap {
+      width: min(920px, 100%);
+      text-align: center;
+    }
+
+    .kicker {
+      color: var(--muted);
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font-weight: 500;
+      font-size: clamp(1.4rem, 3.4vw, 2.1rem);
+      letter-spacing: 0.02em;
+      margin-bottom: 8px;
+    }
+
+    .when {
+      color: var(--accent);
+      font-size: 1rem;
+      margin-bottom: 28px;
+    }
+
+    .quote {
+      font-style: italic;
+      font-size: clamp(1rem, 2.5vw, 1.22rem);
+      line-height: 1.55;
+      max-width: 34em;
+      margin: 0 auto 44px;
+      padding: 0;
+      border: 0;
+      color: var(--text);
+    }
+
+    .quote cite {
+      display: block;
+      margin-top: 10px;
+      font-style: normal;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .unit {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 22px 8px 16px;
+    }
+
+    .value {
+      font-variant-numeric: tabular-nums;
+      font-size: clamp(2.1rem, 8vw, 4.4rem);
+      line-height: 1;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    .label {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .done {
+      display: none;
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      color: var(--accent);
+    }
+
+    .done.visible {
+      display: block;
+    }
+
+    .grid.hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <p class="kicker">Odliczanie</p>
+    <h1>Pozostało do wskazanej chwili</h1>
+    <p class="when">29 sierpnia 2026, godz. 13:00</p>
+
+    <blockquote class="quote">
+      <p id="quoteText"></p>
+      <cite id="quoteAuthor" hidden></cite>
+    </blockquote>
+
+    <div class="grid" id="grid">
+      <div class="unit">
+        <div class="value" id="hours">00</div>
+        <div class="label">godziny</div>
+      </div>
+      <div class="unit">
+        <div class="value" id="minutes">00</div>
+        <div class="label">minuty</div>
+      </div>
+      <div class="unit">
+        <div class="value" id="seconds">00</div>
+        <div class="label">sekundy</div>
+      </div>
+    </div>
+
+    <p class="done" id="done">Czas nadszedł</p>
+  </main>
+
+  <script>
+    const QUOTES = [
+      { text: "Miłość nie pyta o godzinę. Czeka, aż dwoje powie: tak." },
+      { text: "Najpiękniejsza droga zaczyna się od wspólnego tak." },
+      { text: "Dwoje serc, jedna decyzja, całe życie przed nami." },
+      { text: "Ślub to nie koniec historii. To pierwsza strona wspólnej książki." },
+      { text: "Tam, gdzie kończy się ja, zaczyna się my." },
+      { text: "Nie szukaj idealnego dnia. Szukaj kogoś, z kim każdy dzień ma sens." },
+      { text: "Obietnica złożona w południe może trwać do końca świata." },
+      { text: "Miłość jest odważna: staje przy kimś na oczach wszystkich." },
+      { text: "Wspólny dom buduje się z codziennych gestów i jednego wielkiego tak." },
+      { text: "Najlepsze na zawsze zaczyna się od zwykłego dnia." },
+      { text: "Co Bóg złączył, człowiek niech nie rozdziela.", author: "Ewangelia" },
+      { text: "Szczęście to mieć kogoś, do kogo wraca się myślą jeszcze przed ślubem." },
+      { text: "We dwoje nawet cisza brzmi jak obietnica." },
+      { text: "Nie chodzi o to, by nigdy nie zgubić drogi. Chodzi o to, by iść nią razem." },
+      { text: "Dzień ślubu mija. Wybór zostaje." }
+    ];
+
+    const picked = QUOTES[Math.floor(Math.random() * QUOTES.length)];
+    document.getElementById("quoteText").textContent = picked.text;
+    if (picked.author) {
+      const authorEl = document.getElementById("quoteAuthor");
+      authorEl.textContent = picked.author;
+      authorEl.hidden = false;
+    }
+
+    const TARGET = new Date("2026-08-29T13:00:00+02:00").getTime();
+
+    const hoursEl = document.getElementById("hours");
+    const minutesEl = document.getElementById("minutes");
+    const secondsEl = document.getElementById("seconds");
+    const gridEl = document.getElementById("grid");
+    const doneEl = document.getElementById("done");
+
+    function pad(n) {
+      return String(n).padStart(2, "0");
+    }
+
+    function tick() {
+      const diff = TARGET - Date.now();
+
+      if (diff <= 0) {
+        gridEl.classList.add("hidden");
+        doneEl.classList.add("visible");
+        return;
+      }
+
+      const sec = Math.floor(diff / 1000);
+      hoursEl.textContent = pad(Math.floor(sec / 3600));
+      minutesEl.textContent = pad(Math.floor((sec % 3600) / 60));
+      secondsEl.textContent = pad(sec % 60);
+    }
+
+    tick();
+    setInterval(tick, 250);
+  </script>
+</body>
+</html>
